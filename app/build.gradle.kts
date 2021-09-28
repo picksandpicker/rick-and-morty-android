@@ -4,6 +4,7 @@ plugins {
     id("kotlin-kapt")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
+    id("com.apollographql.apollo")
 }
 
 android {
@@ -34,6 +35,21 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+apollo {
+    generateKotlinModels.set(true) // or false for Java models
+    service("RickAndMorty") {
+        schemaPath.set("src/main/graphql/com/rickandmorty/app/schema.json")
+        sourceFolder.set(".")
+        introspection {
+            endpointUrl.set("https://rickandmortyapi.com/graphql")
+        }
+    }
+}
+
+sourceSets.create("main") {
+    java.srcDir("${buildDir.absolutePath}/tmp/kapt3/stubs//main/kotlinGenerated/")
 }
 
 dependencies {
